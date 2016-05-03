@@ -2,6 +2,10 @@
 - hosts: all
   become: True
 
+  handlers:
+    - name: apt-get update
+      apt: update_cache=yes
+
   vars:
     local_pg_password: ahPhei8e
 
@@ -21,8 +25,19 @@
         - g++
         - ncurses-dev
 
+    - name: Add Heroku keyserver
+      apt_key: url=https://toolbelt.heroku.com/apt/release.key state=present
+
+    - name: Add Heroku apt repo
+      apt_repository: repo='deb http://toolbelt.heroku.com/ubuntu ./' state=present
+
+    - name: Install heroku-toolbelt
+      apt: name=heroku-toolbelt
+
     - name: Add apt-key from Ubuntu key server
       apt_key: keyserver=keyserver.ubuntu.com id=7FCC7D46ACCC4CF8
+      notify:
+        - apt-get update
 
     - name: Add apt repo for PostgreSQL
       apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' state=present
