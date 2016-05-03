@@ -33,3 +33,39 @@ Next step is to setup your **local** database:
 ```
 bundle exec rails db:setup
 ```
+
+## Running the application
+
+To run the application locally run the following command inside `/home/vagrant/project`:
+
+```
+bundle exec rails s -b 0.0.0.0
+```
+
+You can now access the website **on your** computer under <http://localhost:3030/>.
+
+On this page you can manage your todo items. Go ahead and create some items.
+
+
+## Deploy the application
+
+(For more details see the [official Heroku guide for Rails 4 apps](https://devcenter.heroku.com/articles/getting-started-with-rails4))
+
+Head over to [Heroku](http://heroku.com/) and create an account. After that login to your account inside
+the box (if you don't run this inside the VM install the [Heroku Toolbelt](https://toolbelt.heroku.com/)):
+
+```
+heroku login
+```
+
+Now you need to create an app on Heroku:
+
+```
+heroku create
+```
+
+Now you can push your repo to Heroku:
+
+```
+git push heroku master
+```
