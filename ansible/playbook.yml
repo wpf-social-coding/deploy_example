@@ -1,0 +1,65 @@
+---
+- hosts: all
+  become: True
+
+  vars:
+    local_pg_password: ahPhei8e
+
+  tasks:
+    # Install build requirements
+    - name: Install dev dependencies (i.e. build essentials, libXML)
+      apt: name={{ item }}
+      with_items:
+        - libxml2-dev
+        - libxml2-utils
+        - libxslt1-dev
+        - autoconf
+        - binutils-doc
+        - bison
+        - build-essential
+        - gcc
+        - g++
+        - ncurses-dev
+
+    - name: Add apt-key from Ubuntu key server
+      apt_key: keyserver=keyserver.ubuntu.com id=7FCC7D46ACCC4CF8
+
+    - name: Add apt repo for PostgreSQL
+      apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' state=present
+      notify:
+        - apt-get update
+
+    - name: Install postgresql
+      apt: name={{ item }}
+      with_items:
+        - postgresql-client-9.4
+        - libpq-dev
+        - postgresql-9.4
+        - python-psycopg2
+
+    - name: Start postgresql service
+      service: name=postgresql state=started enabled=yes
+
+    - name: Setup application user
+      postgresql_user: name=demo password='{{ local_pg_password }}' role_attr_flags=SUPERUSER,CREATEDB
+      become_user: postgres
+
+    - name: Setup development databases for demo
+      postgresql_db: name='{{ item }}' owner=demo
+      become_user: postgres
+      with_items:
+        - demo
+        - demo_test
+
+    - name: Grant privileges for applicaiton user
+      become_user: postgres
+      postgresql_privs: >
+        database={{ item }}
+        privs=SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES,CONNECT,TEMP,EXECUTE
+        type=table
+        schema=public
+        obj=ALL_IN_SCHEMA
+        role=demo
+      with_items:
+        - demo
+        - demo_test
