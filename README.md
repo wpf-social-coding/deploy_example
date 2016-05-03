@@ -69,3 +69,15 @@ Now you can push your repo to Heroku:
 ```
 git push heroku master
 ```
+
+Last step is to migrate the database:
+
+```
+heroku run rake db:migrate
+```
+
+Congratulations! You just deployed to Heroku. Visit your app under your generated domain. Find out that domain by running:
+
+```
+heroku open
+```
