@@ -31,7 +31,7 @@ bundle install
 Next step is to setup your **local** database:
 
 ```
-bundle exec rails db:setup
+bundle exec rake db:setup
 ```
 
 ## Running the application
