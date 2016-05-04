@@ -23,6 +23,10 @@ gem "jbuilder", "~> 2.0"
 gem "puma"
 
 group :development, :test do
+  gem "capistrano"
+  gem "capistrano-rails"
+  gem "capistrano-bundler"
+  gem "capistrano-passenger"
   gem "byebug"
   gem "dotenv-rails"
 end
